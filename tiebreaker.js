@@ -201,7 +201,7 @@ function getOpponentsMatchWinPercentages(player){
 }
 
 function getGameWinPercentage(player){
-	var points = (3*player.games_won + player.games_drawn)/(3*player.games);
+	var points = Math.max(0.33, (3*player.games_won + player.games_drawn)/(3*player.games));
 	return points;
 }
 
@@ -209,7 +209,7 @@ function getOpponentsGameWinPercentages(player){
 	var foes = player.opponents.length;
 	var percentages = 0;
 	for (var i = 0; i < foes; i++) {
-		percentages += Math.max(pgws[player.opponents[i]], 0.33);
+		percentages += pgws[player.opponents[i]];
 	}
 	return percentages/foes;
 }
