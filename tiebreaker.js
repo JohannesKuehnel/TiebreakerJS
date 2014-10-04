@@ -507,33 +507,34 @@ function getQueryParams(qs) {
 }
 
 function reset(){
-	currentRound = 0;
-	maxRounds = 0;
-	matches.splice(0, matches.length);
-	editMatchId = "";
-	editMatch = null;
-	pmps.splice(0, pmps.length);
-	pmws.splice(0, pmws.length);
-	pgws.splice(0, pgws.length);
-	renderPlayerlist();
-	players.forEach(function(entry){
-		entry.opponents.splice(0, entry.opponents.length);
-		entry.matches = 0;
-		entry.matches_won = 0;
-		entry.matches_drawn = 0;
-		entry.games = 0;
-		entry.games_won = 0;
-		entry.games_drawn = 0;
-	});
-	finished = false;
-	$('div#resultlistTitle').html("");
-	$('div#resultlistContainer').html("<ol id='resultlist'></ol>");
-	if(startButton !== null)
-	{
-		$("div#resultButtons").html("");
-		$("div#resultButtons").append(startButton);
-	}
-	alert("All rounds have been deleted!");
+    if(confirm("Reset the tournament?")) {
+        currentRound = 0;
+        maxRounds = 0;
+        matches.splice(0, matches.length);
+        editMatchId = "";
+        editMatch = null;
+        pmps.splice(0, pmps.length);
+        pmws.splice(0, pmws.length);
+        pgws.splice(0, pgws.length);
+        renderPlayerlist();
+        players.forEach(function (entry) {
+            entry.opponents.splice(0, entry.opponents.length);
+            entry.matches = 0;
+            entry.matches_won = 0;
+            entry.matches_drawn = 0;
+            entry.games = 0;
+            entry.games_won = 0;
+            entry.games_drawn = 0;
+        });
+        finished = false;
+        $('div#resultlistTitle').html("");
+        $('div#resultlistContainer').html("<ol id='resultlist'></ol>");
+        if (startButton !== null) {
+            $("div#resultButtons").html("");
+            $("div#resultButtons").append(startButton);
+        }
+        alert("All rounds have been deleted!");
+    }
 }
 
 function exportTournament(){
