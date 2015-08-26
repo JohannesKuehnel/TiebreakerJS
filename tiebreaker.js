@@ -1,11 +1,11 @@
- /*
+/*
 	TiebreakerJS is a webapp to manage small MTG tournaments.
-  
-	Copyright (c) 2014, Johannes Kühnel - www.kraken.at
+
+	Copyright (c) 2015, Johannes Kühnel - www.kraken.at
 	All rights reserved.
 
 	TiebreakerJS is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-	http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US 
+	http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US
 
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -108,7 +108,7 @@ function addMatchResult(match, wins_a, wins_b, draws){
 		{
 			player_a.matches_drawn++;
 			player_b.matches_drawn++;
-		}	
+		}
 	}
 	else // new result
 	{
@@ -229,8 +229,8 @@ function getNumberOfRounds(){
 }
 
 function getPairings(){
-	//$('div#resultlistTitle').html("<h3>Round " + currentRound + " of " + maxRounds + ":</h3>");
-	$('select#select-round').append("<option value='" + currentRound + "''>Round " + currentRound + " of " + maxRounds + "</option>");
+	//$('div#resultlistTitle').html("<h3>Ronde " + currentRound + " sur " + maxRounds + ":</h3>");
+	$('select#select-round').append("<option value='" + currentRound + "''>Ronde " + currentRound + " sur " + maxRounds + "</option>");
 	$('select#select-round').val(currentRound);
 	$('select#select-round').selectmenu('refresh');
 
@@ -291,10 +291,10 @@ function getPairings(){
 				else
 				{
 					/*
-					 TODO: 
+					 TODO:
 					 Take random, or else players are more likely to play players they've already faced several times
 					  than ones they have faced once
-					
+
 						add already played people into an array and sort it by the # of occurences in a.opponents and points
 					 */
 					//offset = Math.floor((Math.random()*offset) + 1);
@@ -351,15 +351,15 @@ function resultsReady(){
 
 function createRound(){
 	if(players.length < 4)
-		alert("Add at least four (4) players!");
+		alert("Ajouter au moins quatre (4) joueurs!");
 	else if(currentRound > 0 && resultsReady() !== (matches.length/currentRound))
-		alert("Enter all match results!");
+		alert("Rentrez tous les résultats des matchs !");
 	else
 	{
 		if(currentRound === maxRounds)
 		{
-			//$('div#resultlistTitle').html("<h3>Standings after " + currentRound + " rounds:</h3>");
-			$('select#select-round').append("<option value='0'>Standings</option>");
+			//$('div#resultlistTitle').html("<h3>Classement après " + currentRound + " ronde(s):</h3>");
+			$('select#select-round').append("<option value='0'>Classement</option>");
 			$('select#select-round').val(0);
 			$('select#select-round').selectmenu('refresh');
 
@@ -370,7 +370,7 @@ function createRound(){
 				pgws[players[i].player] = parseFloat(getGameWinPercentage(players[i]));
 			}
 			players.sort(sortByMatchPointsWithTiebreakers);
-			$('div#resultlistContainer').prepend("<b>Player - points</b> / matches / wins / losses / draws");
+			$('div#resultlistContainer').prepend("<b>Joueur - points</b> / matchs / victoires / défaites / égalités");
 			for (var i = 0; i < players.length; i++) {
 				$('ol#resultlist').append("<li><b>" + players[i].player + " - " + pmps[players[i].player] + "</b> / "+ players[i].matches + " / " + players[i].matches_won + " / " + (players[i].matches - (players[i].matches_won + players[i].matches_drawn)) + " / " + players[i].matches_drawn + "<br>");
 				$('ol#resultlist').append("OMW: " + parseFloat(getOpponentsMatchWinPercentages(players[i])).toFixed(2) + ", PGW: " + pgws[players[i].player].toFixed(2) + ", OGW: " + parseFloat(getOpponentsGameWinPercentages(players[i])).toFixed(2) + "</li>");
@@ -385,7 +385,7 @@ function createRound(){
 			else if(currentRound === 0)
 			{
 				startButton = $("a#startButton").detach();
-				$("div#resultButtons").append('<a href="#" id="pairingButton" class="ui-btn ui-corner-all ui-shadow" onclick="createRound();">Create next round!</a>');
+				$("div#resultButtons").append('<a href="#" id="pairingButton" class="ui-btn ui-corner-all ui-shadow" onclick="createRound();">Créer la ronde suivante !</a>');
 				$("div#resultlistTitle").html('<select name="select-round" id="select-round" onchange="renderRound($(\'select#select-round\').val())"></select>');
 				$('select#select-round').selectmenu();
 			}
@@ -399,7 +399,7 @@ function renderRound(round){
 	$("div#resultlistContainer").html("<ol id='resultlist'></ol>");
 	if(round == 0) // Standings
 	{
-		$('div#resultlistContainer').prepend("<b>Player - points</b> / matches / wins / losses / draws");
+		$('div#resultlistContainer').prepend("<b>Joueur - points</b> / matchs / victoires / défaites / égalités");
 		for (var i = 0; i < players.length; i++) {
 			$('ol#resultlist').append("<li><b>" + players[i].player + " - " + pmps[players[i].player] + "</b> / "+ players[i].matches + " / " + players[i].matches_won + " / " + (players[i].matches - (players[i].matches_won + players[i].matches_drawn)) + " / " + players[i].matches_drawn + "<br>");
 			$('ol#resultlist').append("OMW: " + parseFloat(getOpponentsMatchWinPercentages(players[i])).toFixed(2) + ", PGW: " + pgws[players[i].player].toFixed(2) + ", OGW: " + parseFloat(getOpponentsGameWinPercentages(players[i])).toFixed(2) + "</li>");
@@ -428,19 +428,19 @@ function renderRound(round){
 
 function addPlayer(name){
 	if(currentRound > 0)
-		alert("Cannot add players between rounds!");
+		alert("Impossible d'ajouter des joueurs entre les rondes !");
 	else if(name !== "" && getPlayerByName(name) === null)
 	{
 		players.push(new Player(name));
 		renderPlayerlist();
 	}
 	else
-		alert("Enter a unique player name!");
+		alert("Entrez un nom de joueur unique !");
 }
 
 function removePlayer(player){
 	if(currentRound > 0)
-		alert("Cannot remove players between rounds!");
+		alert("Impossible de retirer des joueurs entre les rondes !");
 	else
 	{
 		var i = 0;
@@ -473,7 +473,7 @@ function renderPlayerlist(){
 		}
 	}
 	else
-		$("ul#playerlist").append("<li>no players added</li>");
+		$("ul#playerlist").append("<li>pas de joueurs ajoutés</li>");
 
 	playersAsString = "";
 	for (var i = 0; i < players.length; i++) {
@@ -507,7 +507,7 @@ function getQueryParams(qs) {
 }
 
 function reset(){
-    if(confirm("Reset the tournament?")) {
+    if(confirm("Réinitialiser le tournoi?")) {
         currentRound = 0;
         maxRounds = 0;
         matches.splice(0, matches.length);
@@ -533,7 +533,7 @@ function reset(){
             $("div#resultButtons").html("");
             $("div#resultButtons").append(startButton);
         }
-        alert("All rounds have been deleted!");
+        alert("Toutes les rondes ont été supprimées !");
     }
 }
 
@@ -542,7 +542,7 @@ function exportTournament(){
 	var output = "";
 	if(players.length > 0)
 	{
-		output += "Players (" + players.length + "):\n";
+		output += "Joueurs (" + players.length + "):\n";
 		players.forEach(function(entry){
 			output += "  " + entry.player + "\n";
 		});
@@ -550,7 +550,7 @@ function exportTournament(){
 	if(matches.length > 0)
 	{
 		output += "-------------------------------------------\n";
-		output += "Matches:\n";
+		output += "Matchs:\n";
 
 		var roundCnt = 0;
 		matches.forEach(function(entry){
@@ -565,7 +565,7 @@ function exportTournament(){
 	if(finished)
 	{
 		output += "-------------------------------------------\n";
-		output += "Standings (Player - points / matches / wins / losses / draws):\n";
+		output += "Classement (Joueur - points / matchs / victoires / défaites / égalités):\n";
 		var place = 1;
 		players.forEach(function(entry){
 			output += " " + (place++) + ". " + entry.player + " - " + pmps[entry.player] + " / " + entry.matches + " / " + entry.matches_won + " / " + (entry.matches - (entry.matches_won + entry.matches_drawn)) + " / " + entry.matches_drawn;
