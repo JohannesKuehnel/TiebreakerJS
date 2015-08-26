@@ -1,11 +1,11 @@
  /*
 	TiebreakerJS is a webapp to manage small MTG tournaments.
-  
-	Copyright (c) 2014, Johannes Kühnel - www.kraken.at
+
+	Copyright (c) 2015, Johannes Kühnel - www.kraken.at
 	All rights reserved.
 
 	TiebreakerJS is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-	http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US 
+	http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US
 
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -108,7 +108,7 @@ function addMatchResult(match, wins_a, wins_b, draws){
 		{
 			player_a.matches_drawn++;
 			player_b.matches_drawn++;
-		}	
+		}
 	}
 	else // new result
 	{
@@ -291,10 +291,10 @@ function getPairings(){
 				else
 				{
 					/*
-					 TODO: 
+					 TODO:
 					 Take random, or else players are more likely to play players they've already faced several times
 					  than ones they have faced once
-					
+
 						add already played people into an array and sort it by the # of occurences in a.opponents and points
 					 */
 					//offset = Math.floor((Math.random()*offset) + 1);
