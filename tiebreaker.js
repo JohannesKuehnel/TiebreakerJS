@@ -381,7 +381,7 @@ function createRound(){
 		else
 		{
 			if(currentRound === (maxRounds - 1))
-				$("a#pairingButton").html("Standings");
+				$("a#pairingButton").html("Classement");
 			else if(currentRound === 0)
 			{
 				startButton = $("a#startButton").detach();
@@ -482,7 +482,7 @@ function renderPlayerlist(){
 			playersAsString += ",";
 	};
 	// TODO: use actual url
-	$("input#url").val("http://tiebreaker.kraken.at/?players=" + playersAsString);
+	$("input#url").val("http://tiebreaker.kraken.at/fr/?players=" + playersAsString);
 }
 
 function renderEnterDialog(){
@@ -550,7 +550,7 @@ function exportTournament(){
 	if(matches.length > 0)
 	{
 		output += "-------------------------------------------\n";
-		output += "Matchs:\n";
+		output += "Matches:\n";
 
 		var roundCnt = 0;
 		matches.forEach(function(entry){
