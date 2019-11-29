@@ -11,7 +11,7 @@ TiebreakerJS is a webapp to manage small MTG tournaments with your smartphone, t
 
 ## License
 
-Copyright (c) 2019, Johannes Kühnel - https://github.com/JohannesKuehnel
+Copyright (c) 2019, Johannes Kühnel - https://www.kuehnel.co.at
 All rights reserved.
 
 TiebreakerJS is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.

@@ -1,253 +1,226 @@
 <!DOCTYPE html>
+<!--
+  TiebreakerJS is a webapp to manage small MTG tournaments.
+
+  Copyright (c) 2019, Johannes Kühnel - https://www.kuehnel.co.at
+  All rights reserved.
+
+  TiebreakerJS is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+  http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-		<meta name="description" content="TiebreakerJS is a WebApp to organize Swiss tournaments of popular TCGs." />
-		<meta name="keywords" content="mtg, swiss, tournament, organizer, magic, magic the gathering, webapp, app, application, ios, android, mobile, tool, kraken" />
-		<title>
-			TiebreakerJS
-		</title>
-		<link rel="apple-touch-icon" href="http://tiebreaker.kraken.at/apple-touch-icon-precomposed.png"/>
-		<link rel="apple-touch-icon" href="http://tiebreaker.kraken.at/apple-touch-icon.png" />
-		<!--<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
-		<link rel="apple-touch-icon" sizes="152x152" href="http://tiebreaker.kraken.at/apple-touch-icon-152x152.png" />-->
-		<link rel="icon" type="image/x-icon" href="http://tiebreaker.kraken.at/favicon.ico" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-		<script src="tiebreaker.js"></script>
-		<script type="text/javascript">
-			/*
-				TiebreakerJS is a webapp to manage small MTG tournaments.
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="description" content="TiebreakerJS is a WebApp to organize Swiss tournaments of popular TCGs." />
+    <meta name="keywords" content="mtg, swiss, tournament, organizer, magic, magic the gathering, webapp, app, application, ios, android, mobile, tool, kraken" />
+    <title>
+      TiebreakerJS
+    </title>
+    <link rel="apple-touch-icon" href="apple-touch-icon-precomposed.png"/>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <!--<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="http://tiebreaker.kraken.at/apple-touch-icon-152x152.png" />-->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="tiebreaker.js"></script>
+    <script type="text/javascript">
+      var query = getQueryParams(document.location.search);
+      if(query.hasOwnProperty("players"))
+      {
+        var playersFromUrl = query.players.split(",");
+        playersFromUrl.forEach(function(entry){
+          addPlayer(entry);
+        });
+      }
+    </script>
+    <style>
+      .custom-corners .ui-bar {
+        -webkit-border-top-left-radius: inherit;
+        border-top-left-radius: inherit;
+        -webkit-border-top-right-radius: inherit;
+        border-top-right-radius: inherit;
+      }
+      .custom-corners .ui-body {
+        border-top-width: 0;
+        -webkit-border-bottom-left-radius: inherit;
+        border-bottom-left-radius: inherit;
+        -webkit-border-bottom-right-radius: inherit;
+        border-bottom-right-radius: inherit;
+      }
+        h3.title {
+            text-align: center;
+        }
+    </style>
+  </head>
+  <body>
+    <div data-role="page" id="players">
+      <div data-theme="" data-role="header">
+        <h3>TiebreakerJS</h3>
+        <div data-role="navbar" data-iconpos="top">
+          <ul>
+            <li><a href="#players" data-theme="b" data-icon="user" class="ui-btn-active ui-state-persist">Players</a></li>
+            <li><a href="#results" data-theme="b" data-icon="bullets">Results</a></li>
+          </ul>
+        </div>
+      </div>
+      <div data-role="content">
+        <!--<div id="adderror"></div>-->
+        <div id="addplayer">
+          <!--<label for="basic">Add Player:</label>-->
+          <input type="text" name="player" id="playername" data-clear-btn="true" />
+          <a data-role="button" href="#players" onclick="addPlayer($('input#playername').val());$('input#playername').val('')">Add player</a>
+        </div>
+        <div class="ui-corner-all custom-corners">
+          <div class="ui-bar ui-bar-a">
+            <h3 id='playerlistTitle'>Playerlist:</h3>
+          </div>
+          <div class="ui-body ui-body-a">
+            <ul id='playerlist'>
+              <!--<div id="playerlist"></div>-->
+            </ul>
+          </div>
+        </div>
+        <div id="functionalButtons">
+          <a data-role="button" href="#copyurl" data-rel="dialog">Save playerlist</a>
+          <a id="exportButton" data-role="button" href="#" onclick="exportTournament()" download="tournament.txt">Export tournament</a>
+        </div>
+        <script type="text/javascript">
+          renderPlayerlist();
+        </script>
+      </div>
+      <div data-role="footer">
+        <div data-role="controlgroup" data-type="horizontal">
+          <a href="#copyright" data-role="button" data-icon="info" data-rel="dialog"><div>About</div></a>
+          <a id='footer_copyright' target="_blank" href="https://www.kuehnel.co.at" data-role="button"><div>2019 &copy; Johannes K&uuml;hnel</div></a>
+        </div>
+      </div>
+    </div>
 
-				Copyright (c) 2015, Johannes Kühnel - www.kraken.at
-				All rights reserved.
+    <div data-role="page" id="results">
+      <div data-theme="" data-role="header">
+        <h3>TiebreakerJS</h3>
+        <div data-role="navbar" data-iconpos="top">
+          <ul>
+            <li><a href="#players" data-theme="b" data-icon="user">Players</a></li>
+            <li><a href="#results" data-theme="b" data-icon="bullets" class="ui-btn-active ui-state-persist">Results</a></li>
+          </ul>
+        </div>
+      </div>
+      <div data-role="content">
+        <div id="resultButtons">
+          <a href="#roundsDialog" id="startButton" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow" onclick="$('input#rounds').val(getNumberOfRounds());">Start the tournament!</a>
+        </div>
+        <div data-role="popup" id="roundsDialog" data-overlay-theme="b" data-theme="b" style="max-width:400px;">
+            <div data-role="header">
+              <h1>Setup</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <h3 class="ui-title">Enter the # of rounds to be played:</p>
+                <input type="number" name="rounds" id="rounds" value="" data-theme="a">
+                <a href="#" class="ui-btn ui-corner-all ui-shadow" data-rel="back" onclick="if($('input#rounds').val() > 1){maxRounds = parseInt($('input#rounds').val()); createRound();}else{alert('Enter a positive number of rounds!')}">OK</a>
+            </div>
+        </div>
+        <div class="ui-corner-all custom-corners">
+          <div id='resultlistTitle' class="ui-bar ui-bar-a"></div>
+          <div class="ui-body ui-body-a" id='resultlistContainer'>
+            <ol id='resultlist'>
+            </ol>
+          </div>
+          <a data-role="button" href="#" onclick="reset()">Reset</a>
+        </div>
+      </div>
 
-				TiebreakerJS is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-				http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US
+      <div data-theme="" data-role="footer">
+        <div data-role="controlgroup" data-type="horizontal">
+          <a href="#copyright" data-role="button" data-icon="info" data-rel="dialog"><div>About</div></a>
+          <a id='footer_copyright' target="_blank" href="https://www.kuehnel.co.at" data-role="button"><div>2019 &copy; Johannes K&uuml;hnel</div></a>
+        </div>
+      </div>
+    </div>
 
-				THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-				ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-				WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-				DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-				ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-				(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-				LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-				ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-				(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-				SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-			*/
+    <div data-role="page" id="enterresult">
+      <div data-role="content">
+        <div id='result'>
+          <p><b>Enter result:</b></p>
+          <div class='ui-grid-b'>
+            <div class='ui-block-a' id='player_a'>
+              Player A
+            </div>
+            <div class='ui-block-b' id='player_b'>
+              Player B
+            </div>
+            <div class='ui-block-b'>
+              Draws
+            </div>
+          </div>
+          <div class='ui-grid-b'>
+            <div class='ui-block-a'>
+              <input type="number" name="wins_a" id="wins_a" value="" />
+            </div>
+            <div class='ui-block-b'>
+              <input type="number" name="wins_b" id="wins_b" value="" />
+            </div>
+            <div class='ui-block-c'>
+              <input type="number" name="draws" id="draws" value="" />
+            </div>
+          </div>
+          <div class='ui-grid-a'>
+            <div class='ui-block-a'><a data-role="button" href="#results" data-rel="back">Cancel</a></div>
+            <!--<div class='ui-block-b'><a data-role="button" href="#results" onclick="addMatchResult(editMatch, -1, -1, -1)" data-rel="back">ID</a></div>-->
+            <div class='ui-block-b'><a id="savematch" data-role="button" href="#results" onclick="addMatchResult(editMatch, $('input#wins_a').val(), $('input#wins_b').val(), $('input#draws').val())" data-rel="back">Save</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-			var query = getQueryParams(document.location.search);
-			if(query.hasOwnProperty("players"))
-			{
-				var playersFromUrl = query.players.split(",");
-				playersFromUrl.forEach(function(entry){
-					addPlayer(entry);
-				});
-			}
-		</script>
-		<style>
-			.custom-corners .ui-bar {
-			  -webkit-border-top-left-radius: inherit;
-			  border-top-left-radius: inherit;
-			  -webkit-border-top-right-radius: inherit;
-			  border-top-right-radius: inherit;
-			}
-			.custom-corners .ui-body {
-			  border-top-width: 0;
-			  -webkit-border-bottom-left-radius: inherit;
-			  border-bottom-left-radius: inherit;
-			  -webkit-border-bottom-right-radius: inherit;
-			  border-bottom-right-radius: inherit;
-			}
-		    h3.title {
-		        text-align: center;
-		    }
-		</style>
-	</head>
-	<body>
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <div data-role="page" id="copyurl">
+      <div data-role="content">
+        <div id='result'>
+          <p><b>Save this as a bookmark:</b></p>
+          <div>
+            <div><input type="text" name="url" id="url" /></div>
+            <script type="text/javascript">$("input#url").val("http://tiebreaker.kraken.at/?players=" + playersAsString);</script>
+            <div><a data-role="button" href="#players" data-rel="back">Back</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-			ga('create', 'UA-6093692-4', 'kraken.at');
-			ga('send', 'pageview');
-		</script>
-		<div data-role="page" id="players">
-			<div data-theme="" data-role="header">
-				<h3>TiebreakerJS</h3>
-				<div data-role="navbar" data-iconpos="top">
-					<ul>
-						<li><a href="#players" data-theme="b" data-icon="user" class="ui-btn-active ui-state-persist">Players</a></li>
-						<li><a href="#results" data-theme="b" data-icon="bullets">Results</a></li>
-					</ul>
-				</div>
-			</div>
-			<div data-role="content">
-				<!--<div id="adderror"></div>-->
-				<div id="addplayer">
-					<!--<label for="basic">Add Player:</label>-->
-					<input type="text" name="player" id="playername" data-clear-btn="true" />
-					<a data-role="button" href="#players" onclick="addPlayer($('input#playername').val());$('input#playername').val('')">Add player</a>
-				</div>
-				<div class="ui-corner-all custom-corners">
-					<div class="ui-bar ui-bar-a">
-						<h3 id='playerlistTitle'>Playerlist:</h3>
-					</div>
-					<div class="ui-body ui-body-a">
-						<ul id='playerlist'>
-							<!--<div id="playerlist"></div>-->
-						</ul>
-					</div>
-				</div>
-				<div id="functionalButtons">
-					<a data-role="button" href="#copyurl" data-rel="dialog">Save playerlist</a>
-					<a id="exportButton" data-role="button" href="#" onclick="exportTournament()" download="tournament.txt">Export tournament</a>
-				</div>
-				<script type="text/javascript">
-					renderPlayerlist();
-				</script>
-			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal">
-					<a href="#copyright" data-role="button" data-icon="info" data-rel="dialog"><div>About</div></a>
-					<a id='footer_copyright' target="_blank" href="http://www.kraken.at" data-role="button"><div>2015 &copy; Johannes K&uuml;hnel</div></a>
-				</div>
-			</div>
-		</div>
-
-		<div data-role="page" id="results">
-			<div data-theme="" data-role="header">
-				<h3>TiebreakerJS</h3>
-				<div data-role="navbar" data-iconpos="top">
-					<ul>
-						<li><a href="#players" data-theme="b" data-icon="user">Players</a></li>
-						<li><a href="#results" data-theme="b" data-icon="bullets" class="ui-btn-active ui-state-persist">Results</a></li>
-					</ul>
-				</div>
-			</div>
-			<div data-role="content">
-				<div id="resultButtons">
-					<a href="#roundsDialog" id="startButton" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow" onclick="$('input#rounds').val(getNumberOfRounds());">Start the tournament!</a>
-				</div>
-				<div data-role="popup" id="roundsDialog" data-overlay-theme="b" data-theme="b" style="max-width:400px;">
-				    <div data-role="header">
-				    	<h1>Setup</h1>
-				    </div>
-				    <div role="main" class="ui-content">
-				        <h3 class="ui-title">Enter the # of rounds to be played:</p>
-				        <input type="number" name="rounds" id="rounds" value="" data-theme="a">
-				        <a href="#" class="ui-btn ui-corner-all ui-shadow" data-rel="back" onclick="if($('input#rounds').val() > 1){maxRounds = parseInt($('input#rounds').val()); createRound();}else{alert('Enter a positive number of rounds!')}">OK</a>
-				    </div>
-				</div>
-				<div class="ui-corner-all custom-corners">
-					<div id='resultlistTitle' class="ui-bar ui-bar-a"></div>
-					<div class="ui-body ui-body-a" id='resultlistContainer'>
-						<ol id='resultlist'>
-						</ol>
-					</div>
-					<a data-role="button" href="#" onclick="reset()">Reset</a>
-				</div>
-			</div>
-
-			<div data-theme="" data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal">
-					<a href="#copyright" data-role="button" data-icon="info" data-rel="dialog"><div>About</div></a>
-					<a id='footer_copyright' target="_blank" href="http://www.kraken.at" data-role="button"><div>2015 &copy; Johannes K&uuml;hnel</div></a>
-				</div>
-			</div>
-		</div>
-
-		<div data-role="page" id="enterresult">
-			<div data-role="content">
-				<div id='result'>
-					<p><b>Enter result:</b></p>
-					<div class='ui-grid-b'>
-						<div class='ui-block-a' id='player_a'>
-							Player A
-						</div>
-						<div class='ui-block-b' id='player_b'>
-							Player B
-						</div>
-						<div class='ui-block-b'>
-							Draws
-						</div>
-					</div>
-					<div class='ui-grid-b'>
-						<div class='ui-block-a'>
-							<input type="number" name="wins_a" id="wins_a" value="" />
-						</div>
-						<div class='ui-block-b'>
-							<input type="number" name="wins_b" id="wins_b" value="" />
-						</div>
-						<div class='ui-block-c'>
-							<input type="number" name="draws" id="draws" value="" />
-						</div>
-					</div>
-					<div class='ui-grid-a'>
-						<div class='ui-block-a'><a data-role="button" href="#results" data-rel="back">Cancel</a></div>
-						<!--<div class='ui-block-b'><a data-role="button" href="#results" onclick="addMatchResult(editMatch, -1, -1, -1)" data-rel="back">ID</a></div>-->
-						<div class='ui-block-b'><a id="savematch" data-role="button" href="#results" onclick="addMatchResult(editMatch, $('input#wins_a').val(), $('input#wins_b').val(), $('input#draws').val())" data-rel="back">Save</a></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div data-role="page" id="copyurl">
-			<div data-role="content">
-				<div id='result'>
-					<p><b>Save this as a bookmark:</b></p>
-					<div>
-						<div><input type="text" name="url" id="url" /></div>
-						<script type="text/javascript">$("input#url").val("http://tiebreaker.kraken.at/?players=" + playersAsString);</script>
-						<div><a data-role="button" href="#players" data-rel="back">Back</a></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div data-role="page" id="copyright">
-			<div data-role="header">
-				<div><h3 class='title'>About TiebreakerJS</h3></div>
-			</div>
-			<div data-role="content">
-				<p>Manage your tournaments on the go!</p>
-				<p>This site is best viewed on a mobile device like an iOS or Android powered tablet or smartphone.</p>
-				<p>Contact:</p>
-				<ul>
-					<li>Johannes 'JDK' K&uuml;hnel</li>
-					<li>website: <a href='http://www.kraken.at' target=_blank>www.kraken.at</a></li>
-					<li>twitter: <a href='https://twitter.com/OfficialJDK' target=_blank>@OfficialJDK</a></li>
-					<li><a href='https://github.com/JohannesKuehnel/TiebreakerJS' target=_blank>GitHub</a></li>
-				</ul>
-				<p>License:<br>
-				<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">TiebreakerJS</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.kraken.at" property="cc:attributionName" rel="cc:attributionURL" target="_blank">Johannes Kühnel</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p>
-				<a data-role="button" data-icon="back" data-iconpos="left" href="#players" data-rel="back">Back</a>
-			</div>
-		</div>
-		<script type="text/javascript">
-			var year = date.getFullYear();
-			$('a#footer_copyright').html("<div>" + year + " &copy; Johannes K&uuml;hnel</div>");
-
-			$(function () {
-			    $('[data-role=page]').on('pageshow', function (event, ui) {
-			        try {
-			            if (location.hash) {
-			                ga('send', 'pageview', location.hash);
-			            }
-			            else {
-			                ga('send', 'pageview');
-			            }
-			        }
-			        catch (error) {
-			        }
-			    });
-			});
-
-		</script>
-	</body>
+    <div data-role="page" id="copyright">
+      <div data-role="header">
+        <div><h3 class='title'>About TiebreakerJS</h3></div>
+      </div>
+      <div data-role="content">
+        <p>Manage your tournaments on the go!</p>
+        <p>This site is best viewed on a mobile device like an iOS or Android powered tablet or smartphone.</p>
+        <p>Contact:</p>
+        <ul>
+          <li>Johannes 'JDK' K&uuml;hnel</li>
+          <li>website: <a href='https://www.kuehnel.co.at' target=_blank>www.kuehnel.co.at</a></li>
+          <li><a href='https://github.com/JohannesKuehnel/TiebreakerJS' target=_blank>GitHub</a></li>
+        </ul>
+        <p>License:<br>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">TiebreakerJS</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.kraken.at" property="cc:attributionName" rel="cc:attributionURL" target="_blank">Johannes Kühnel</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p>
+        <a data-role="button" data-icon="back" data-iconpos="left" href="#players" data-rel="back">Back</a>
+      </div>
+    </div>
+    <script type="text/javascript">
+      var year = date.getFullYear();
+      $('a#footer_copyright').html("<div>" + year + " &copy; Johannes K&uuml;hnel</div>");
+    </script>
+  </body>
 </html>
